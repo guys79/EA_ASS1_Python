@@ -55,13 +55,14 @@ def main():
     print(max(fits) < 0)
     print(gen < max_generation)
     print(max(fits) < 0 and gen < max_generation)
-    while max(fits) < 0 and gen < max_generation:
+    while max(fits) < N*N and gen < max_generation:
         # A new generation
         gen = gen + 1
         print("-- Generation %i --" % gen)
 
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
+
         # Clone the selected individuals
         offspring = list(map(toolbox.clone, offspring))
 
@@ -84,12 +85,14 @@ def main():
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
         # Replace old population with new one
+        print(offspring)
         pop[:] = offspring
 
         # Gather all the fitnesses in one list and print the stats
         fits = [ind.fitness.values[0] for ind in pop]
 
         length = len(pop)
+        print(" population size %d" % length)
         mean = sum(fits) / length
         sum2 = sum(x * x for x in fits)
         std = abs(sum2 / length - mean ** 2) ** 0.5
@@ -98,11 +101,12 @@ def main():
         print("  Max %s" % max(fits))
         print("  Avg %s" % mean)
         print("  Std %s" % std)
-        print(" population size %d" % length)
+
     print("Done")
     max2 = -1*N*N
     max_ind = None
     val =0
+    length = len(pop)
     print(" population size %d" % length)
     for ind in pop:
         val = evaluation(ind)

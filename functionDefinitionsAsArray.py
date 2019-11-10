@@ -55,8 +55,8 @@ def evaluation(individual):
                     sum+=getChecks(i,j,individual)
         #print(individual)
         #print(sum)
-        return sum*-1,
-    return -1*len(individual)**3,
+        return  (len(individual) ** 2 )- sum,
+    return 0,
 def checkForValid(ind):
     counter = 0
     for line in ind:

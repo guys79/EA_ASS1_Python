@@ -48,15 +48,21 @@ def printBoard(board):
 def evaluation(individual):
     # assumption, individual is a board
     sum = 0
-   # print(individual)
-    for i in range(0,len(individual)):
-        for j in range(0,len(individual[i])):
-            if individual[i][j] == 1:
-                sum+=getChecks(i,j,individual)
-    #print(individual)
-    #print(sum)
-    return sum*-1,
-
+    if checkForValid(individual):
+        for i in range(0,len(individual)):
+            for j in range(0,len(individual[i])):
+                if individual[i][j] == 1:
+                    sum+=getChecks(i,j,individual)
+        #print(individual)
+        #print(sum)
+        return sum*-1,
+    return -1*len(individual)**3,
+def checkForValid(ind):
+    counter = 0
+    for line in ind:
+        for i in range(0,len(line)):
+            counter = counter + line[i]
+    return count == len(ind) and count == len(ind[0])
 # This function will return the number of checks
 def getChecks(row,col,ind):
     count = 0

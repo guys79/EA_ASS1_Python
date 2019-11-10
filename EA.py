@@ -5,11 +5,16 @@ from functionDefinitionsAsArray import *
 # TODO need to crate new crossover function
 # Defining constants
 N = 8
-pop_size = 100
+pop_size = 1000
 mutation_prob = 0.001
 crossover_prob = 0.7
-max_generation = 100
+max_generation = 10000
 
+def mutate(individual,indpb):
+    ind = []
+    for line in individual:
+        ind.append(tools.mutation.mutFlipBit(line,1/N)[0])
+    return ind,
 
 # Defining Fitness kind and Individual
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
@@ -28,11 +33,49 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 #Function definitions
 toolbox.register("evaluate", evaluation)
 toolbox.register("mate", tools.cxOnePoint)
-#toolbox.register("mutate", tools.mutation.mutFlipBit, indpb=mutation_prob)
-toolbox.register("mutate", tools.mutation.mutFlipBit)
+toolbox.register("mutate", mutate)
 toolbox.register("select", tools.selection.selRoulette)
 
 
+'''
+
+creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+creator.create("Individual", list, fitness=creator.FitnessMin)
+
+toolbox = base.Toolbox()
+toolbox.register("permutation", random.randrange, start=0, stop=NB_QUEENS)
+toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.permutation, n=NB_QUEENS)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+
+toolbox.register("evaluate", evalNQueens)
+toolbox.register("mate", tools.cxOnePoint)
+toolbox.register("mutate", mutShuffle)
+toolbox.register("select", tools.selRoulette)
+
+
+def main():
+
+    pop = toolbox.population(n=100)
+    hof = tools.HallOfFame(1)
+    stats = tools.Statistics(lambda ind: ind.fitness.values)
+    stats.register("Avg", numpy.mean)
+    stats.register("Median", numpy.median)
+    stats.register("Best", numpy.min)
+    stats.register("Worst", numpy.max)
+
+    start_time = time.time()
+
+    algorithms.eaSimple(pop, toolbox, cxpb=0.7, mutpb=0.001, ngen=100, stats=stats, halloffame=hof, verbose=True)
+
+    elapsed_time = time.time() - start_time
+    print('%.2f  seconds' % elapsed_time)
+    return pop, stats, hof
+
+
+if __name__ == "__main__":
+    pop, stats, hof = main()
+    print(hof)
+'''
 def main():
     pop = toolbox.population(n=pop_size)
     # Evaluate the entire population
@@ -61,7 +104,7 @@ def main():
         print("-- Generation %i --" % gen)
 
         # Select the next generation individuals
-        offspring = toolbox.select(pop, len(pop))
+        offspring = toolbox.select(pop, len(pop)) # chosses 0
 
         # Clone the selected individuals
         offspring = list(map(toolbox.clone, offspring))

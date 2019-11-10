@@ -56,13 +56,13 @@ def evaluation(individual):
         #print(individual)
         #print(sum)
         return  (len(individual) ** 2 )- sum,
-    return 0,
+    return 1,
 def checkForValid(ind):
     counter = 0
     for line in ind:
         for i in range(0,len(line)):
             counter = counter + line[i]
-    return count == len(ind) and count == len(ind[0])
+    return counter == len(ind) and counter == len(ind[0])
 # This function will return the number of checks
 def getChecks(row,col,ind):
     count = 0
@@ -122,5 +122,5 @@ def getChecks(row,col,ind):
 #b = createBoard(4)
 #b= [[0, 0, 1, 1], [0, 0, 0, 0], [1, 0, 1, 0], [0, 0, 0, 0]]
 #printBoard(b)
-#print(evaluation(b))
+#print(checkForValid(b))
 # 1 + 3+2+2

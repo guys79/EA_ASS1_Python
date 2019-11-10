@@ -1,27 +1,35 @@
 # This file contains the definitions of the functions
 import random
-
+count =0
+board = []
 # Creating a random board at the size of NxN
 def createBoard (N):
-    set = [] # Set of locations
-    include = [] # already existing locations
+    global count
+    global board
+    if count%N == 0:
+        count = 0
+        set = [] # Set of locations
+        include = [] # already existing locations
 
-    # Create locations
-    for i in range(0,N):
-        loc = createRand(-1,N*N-1,include)
-        include.append(loc)
-        set.append([int(loc/N),loc%N])
+        # Create locations
+        for i in range(0,N):
+            loc = createRand(-1,N*N-1,include)
+            include.append(loc)
+            set.append([int(loc/N),loc%N])
 
-    # Init board
-    board = []
-    for i in range(0,N):
-        line = [0]*N
-        board.append(line)
+        # Init board
+        board = []
+        for i in range(0,N):
+            line = [0]*N
+            board.append(line)
 
-    # Updating board with coordinates
-    for coord in set:
-        board[coord[0]][coord[1]]=1
-    return board
+        # Updating board with coordinates
+        for coord in set:
+            board[coord[0]][coord[1]]=1
+        return board[0]
+    else:
+        return board[count]
+    count = count + 1
 
 
 # This function will create a random number from (min -1 to max, included) that doesn't include in the notInclude set
@@ -39,38 +47,40 @@ def printBoard(board):
 # Evaluation function
 def evaluation(individual):
     # assumption, individual is a board
-    print(individual)
     sum = 0
+   # print(individual)
     for i in range(0,len(individual)):
         for j in range(0,len(individual[i])):
             if individual[i][j] == 1:
                 sum+=getChecks(i,j,individual)
-    return sum
+    #print(individual)
+    #print(sum)
+    return sum*-1,
 
 # This function will return the number of checks
-def getChecks(row,col,board):
+def getChecks(row,col,ind):
     count = 0
     # up
     for k in range(0,row):
-        if board[k][col] == 1:
+        if ind[k][col] == 1:
             count = count + 1
     # down
-    for k in range(row+1,len(board)):
-        if board[k][col] == 1:
+    for k in range(row+1,len(ind)):
+        if ind[k][col] == 1:
             count = count + 1
     # left
     for k in range(0,col):
-        if board[row][k] == 1:
+        if ind[row][k] == 1:
             count = count + 1
     # right
-    for k in range(col+1,len(board[row])):
-        if board[row][k] == 1:
+    for k in range(col+1,len(ind[row])):
+        if ind[row][k] == 1:
             count = count + 1
     # up - right
     i = row -1
     j = col +1
-    while(i >=0 and j <len(board[col])):
-        if board[i][j] == 1:
+    while(i >=0 and j <len(ind[row])):
+        if ind[i][j] == 1:
             count = count + 1
         i = i - 1
         j = j + 1
@@ -79,7 +89,7 @@ def getChecks(row,col,board):
     i = row - 1
     j = col - 1
     while (i >= 0 and j >=0):
-        if board[i][j] == 1:
+        if ind[i][j] == 1:
             count = count + 1
         i = i - 1
         j = j - 1
@@ -87,8 +97,8 @@ def getChecks(row,col,board):
     # down - right
     i = row + 1
     j = col + 1
-    while (i<<len(board) and j<len(board[col])):
-        if board[i][ j] == 1:
+    while (i<len(ind) and j<len(ind[row])):
+        if ind[i][j] == 1:
             count = count + 1
         i = i + 1
         j = j + 1
@@ -96,13 +106,15 @@ def getChecks(row,col,board):
     # down - left
     i = row + 1
     j = col - 1
-    while (j >= 0 and i < len(board)):
-        if board[i][ j] == 1:
+    while (j >= 0 and i < len(ind)):
+        if ind[i][ j] == 1:
             count = count + 1
         i = i + 1
         j = j - 1
     return count
 
-b = createBoard(4)
-printBoard(b)
-print(evaluation(b))
+#b = createBoard(4)
+#b= [[0, 0, 1, 1], [0, 0, 0, 0], [1, 0, 1, 0], [0, 0, 0, 0]]
+#printBoard(b)
+#print(evaluation(b))
+# 1 + 3+2+2
